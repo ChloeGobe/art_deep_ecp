@@ -73,6 +73,6 @@ class_mode = "categorical")
 # Save the model according to the conditions  
 checkpoint = ModelCheckpoint("resnet50.h5", monitor='val_acc', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
 early = EarlyStopping(monitor='val_acc', min_delta=0, patience=10, verbose=1, mode='auto')
+tbCallBack = keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=0, write_graph=True, write_images=True)
 
-
-model_final.fit_generator(train_generator, steps_per_epoch=1040, epochs=20, verbose=1, callbacks=[checkpoint, early], validation_data=validation_generator, validation_steps=116)
+model_final.fit_generator(train_generator, steps_per_epoch=1040, epochs=20, verbose=1, callbacks=[checkpoint, early, tbCallBack], validation_data=validation_generator, validation_steps=116)
