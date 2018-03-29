@@ -1,7 +1,7 @@
 from keras import applications
 from keras.preprocessing.image import ImageDataGenerator
 from keras import optimizers
-from keras.models import Sequential, Model 
+from keras.models import Sequential, Model
 from keras.layers import Dropout, Flatten, Dense, GlobalAveragePooling2D
 from keras import backend as k 
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler, TensorBoard, EarlyStopping
@@ -23,15 +23,21 @@ nb_validation_samples = 7383
 batch_size = 64
 epochs = 50
 
+#model = applications.xception.Xception(weights = "imagenet", include_top=False, input_shape = (img_width, img_height, 3))
 model = applications.resnet50.ResNet50(input_shape=(img_width, img_height, 3), include_top=False, weights='imagenet')
 
-# Only train last 20 layers
-for layer in model.layers[:-20]:
+# Freeze the layers which you don't want to train. Here I am freezing the first 5 layers.
+for layer in model.layers[:-33]:
     layer.trainable = False
 
 #Adding custom Layers 
 x = model.output
+#x = Flatten()(x)
 x = GlobalAveragePooling2D()(x)
+#x = Dense(1024, activation="relu")(x)
+#x = Dropout(0.5)(x)
+#x = Dense(128, activation="elu")(x)
+#x = Dropout(0.25)(x)
 predictions = Dense(25, activation="softmax")(x)
 
 # creating the final model 
@@ -43,7 +49,7 @@ model_final.compile(loss = "categorical_crossentropy", optimizer = optimizers.Ad
 # Initiate the train and test generators with data Augumentation 
 train_datagen = ImageDataGenerator(
 preprocessing_function=imagenet_preprocess_input,
-horizontal_flip = False,
+horizontal_flip = True,
 fill_mode = "nearest",
 zoom_range = 0.,
 width_shift_range = 0.,
@@ -73,6 +79,18 @@ class_mode = "categorical")
 # Save the model according to the conditions  
 checkpoint = ModelCheckpoint("resnet50.h5", monitor='val_acc', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
 early = EarlyStopping(monitor='val_acc', min_delta=0, patience=10, verbose=1, mode='auto')
+
 tbCallBack = TensorBoard(log_dir='./Graph', histogram_freq=0, write_graph=True, write_images=True)
+
+#model_final.load_weights('resnet50.h5')
+
+# Train the model 
+#model_final.fit_generator(
+#train_generator,
+#samples_per_epoch = nb_train_samples,
+#epochs = epochs,
+#validation_data = validation_generator,
+#nb_val_samples = nb_validation_samples,
+#callbacks = [checkpoint, early])
 
 model_final.fit_generator(train_generator, steps_per_epoch=1040, epochs=20, verbose=1, callbacks=[checkpoint, early, tbCallBack], validation_data=validation_generator, validation_steps=116)
