@@ -25,7 +25,7 @@ epochs = 50
 
 #model = applications.resnet50.ResNet50(input_shape=(img_width, img_height, 3), include_top=False, weights='imagenet')
 #model = applications.xception.Xception(weights = "imagenet", include_top=False, input_shape = (img_width, img_height, 3))
-model = applications.inception_v3.InceptionV3(include_top=False, weights='imagenet', input_tensor=None, input_shape=(img_width, img_height, 3), pooling=None, classes=1000)
+model = applications.inception_v3.InceptionV3(include_top=False, weights='imagenet', input_tensor=None, input_shape=tuple(img_width, img_height, 3), pooling=None, classes=1000)
 
 # Freeze the layers which you don't want to train. Here I am freezing the first 5 layers.
 for layer in model.layers[:-1]:
