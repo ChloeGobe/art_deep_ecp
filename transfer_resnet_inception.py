@@ -15,7 +15,7 @@ def imagenet_preprocess_input(x):
     x[:, :, 2] -= 123.68
     return x
 
-img_width, img_height = 224, 224
+img_width, img_height = 299, 299
 train_data_dir = "data/wikipaintings_train"
 validation_data_dir = "data/wikipaintings_val"
 nb_train_samples = 66549
@@ -25,7 +25,7 @@ epochs = 50
 
 #model = applications.resnet50.ResNet50(input_shape=(img_width, img_height, 3), include_top=False, weights='imagenet')
 #model = applications.xception.Xception(weights = "imagenet", include_top=False, input_shape = (img_width, img_height, 3))
-model = applications.inception_v3.InceptionV3(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
+model = applications.inception_v3.InceptionV3(include_top=False, weights='imagenet', input_tensor=None, input_shape=(img_width, img_height, 3), pooling=None, classes=1000)
 
 # Freeze the layers which you don't want to train. Here I am freezing the first 5 layers.
 for layer in model.layers[:-33]:
@@ -78,12 +78,13 @@ target_size = (img_height, img_width),
 class_mode = "categorical")
 
 # Save the model according to the conditions  
-checkpoint = ModelCheckpoint("resnet50.h5", monitor='val_acc', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
+checkpoint = ModelCheckpoint("inceptionV3.h5", monitor='val_acc', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
 early = EarlyStopping(monitor='val_acc', min_delta=0, patience=10, verbose=1, mode='auto')
 
 tbCallBack = TensorBoard(log_dir='./Graph', histogram_freq=0, write_graph=True, write_images=True)
 
-#model_final.load_weights('resnet50.h5')
+# A decommenter pour reprendre une epoch
+#model_final.load_weights('reinceptionV3.h5')
 
 # Train the model 
 #model_final.fit_generator(
