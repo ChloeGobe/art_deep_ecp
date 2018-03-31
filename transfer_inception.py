@@ -26,7 +26,7 @@ epochs = 50
 #model = applications.resnet50.ResNet50(input_shape=(img_width, img_height, 3), include_top=False, weights='imagenet')
 #model = applications.xception.Xception(weights = "imagenet", include_top=False, input_shape = (img_width, img_height, 3))
 model = applications.inception_v3.InceptionV3(include_top=False, weights='imagenet', input_shape=(img_width, img_height, 3))
-return ok
+print("Le nombre de couches :{}".format(len(model.layers)))
 
 # Freeze the layers which you don't want to train. Here I am freezing the first layers.
 for layer in model.layers[:-62]:
