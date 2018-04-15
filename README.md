@@ -28,6 +28,7 @@ Projet de Deep Learning pour la reconnaissance de styles de peintures
 - Keras 2.1.4
 - Tensorflow 1.6
 - Pillow
+- scikit-learn
 
 ## 4. <a name="arborescence"></a>Structure du projet
 
