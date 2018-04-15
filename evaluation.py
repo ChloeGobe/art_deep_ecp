@@ -1,4 +1,5 @@
 # File taken from RASTA
+# Outputs two .npy files used to generate a confusion matrix later
 from keras.models import load_model
 from keras import backend as K
 from keras.layers import Dense
