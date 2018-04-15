@@ -5,7 +5,7 @@
 Projet Deep learning <br>
 Mars - Avril 2018 <hr></i></p>
 
-__Auteurs__ : Xavier Rettel, Mounia Slassi, Chloé Gobé <br>
+__Auteurs__ : Chloé Gobé, Xavier Rettel, Mounia Slassi  <br>
 __Github du projet__ : `https://github.com/ChloeGobe/art_deep_ecp`
 
 ## Index
@@ -25,11 +25,29 @@ Projet de Deep Learning pour la reconnaissance de styles de peintures
 - Adrian Lecoutre, Benjamin Negrevergne, Florian Yger "*Recognizing Art Style Automatically in painting with deep learning*", JMLR: Workshop and Conference Proceedings 80:1–17, 2017 [article](http://www.lamsade.dauphine.fr/~bnegrevergne/webpage/documents/2017_rasta.pdf)  
 
 ## <a name="requirements"></a>3. Requirements techniques
+- Keras 2.1.4
+- Tensorflow 1.6
+- Pillow
 
+## 4. <a name="arborescence"></a>Structure du projet
 
-## 4. <a name="arborescence"></a>Structure du projet 
-
-- Documents
+- **Articles et documents** quelques PDFs qui nous ont servi.
+- **Ceci n'est pas une pipe** clone du répertoire éponyme.
+- **RASTA** clone du répertoire éponyme.
+- **data** : la version très réduite du dataset, pour se faire une idée des données manipulées. Pour faire tourner le code ci-dessous, il faut disposer du dataset complet.
 
 
 ## <a name="installation"></a>5. Installation et lancement
+- Pour télécharger le dataset (20Go): 
+
+      cd data
+      wget www.lamsade.dauphine.fr/~bnegrevergne/webpage/software/rasta/wikipaintaings_full.tgz
+      tar xzvf wikipaintings_full.tgz
+      cd ../
+- Pour lancer un entraînement :
+      python -u transfer_resnet.py
+- Pour lancer l'évaluation sur le set de test :
+      python -u evaluation.py --data_path ./data/wikipaintings_test --model_path ./model.h5
+- La commande précédente affiche l'accuracy Top-1, Top-3 et Top-5 et crée les fichiers ``y_pred.npy`` et ``y_true.npy`` qui correspondent aux prédictions et à la ground truth.
+- Pour générer la matrice de confusion :
+      python confusion.py
