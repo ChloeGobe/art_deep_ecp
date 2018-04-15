@@ -36,6 +36,8 @@ Projet de Deep Learning pour la reconnaissance de styles de peintures
 - **Ceci n'est pas une pipe** clone du répertoire éponyme.
 - **RASTA** clone du répertoire éponyme.
 - **data** : la version très réduite du dataset, pour se faire une idée des données manipulées. Pour faire tourner le code ci-dessous, il faut disposer du dataset complet.
+- *transfert_resnet.py* : code utilisé pour travailler sur le réseau ResNet50, il peut être dupliqué facilement pour utiliser d'autres réseau.
+- *activation_map.py* : tentative d'utiliser les travaux de [Philippe Remy](https://github.com/philipperemy/keras-visualize-activations) pour visualiser les résultats obtenus par le CNN, mais qui n'a pas eu le temps d'aboutir.
 
 
 ## <a name="installation"></a>5. Installation et lancement
