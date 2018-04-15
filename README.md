@@ -45,9 +45,12 @@ Projet de Deep Learning pour la reconnaissance de styles de peintures
       tar xzvf wikipaintings_full.tgz
       cd ../
 - Pour lancer un entraînement :
+
       python -u transfer_resnet.py
 - Pour lancer l'évaluation sur le set de test :
+
       python -u evaluation.py --data_path ./data/wikipaintings_test --model_path ./model.h5
 - La commande précédente affiche l'accuracy Top-1, Top-3 et Top-5 et crée les fichiers ``y_pred.npy`` et ``y_true.npy`` qui correspondent aux prédictions et à la ground truth.
 - Pour générer la matrice de confusion :
+
       python confusion.py
