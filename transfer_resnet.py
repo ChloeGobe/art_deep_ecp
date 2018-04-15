@@ -1,3 +1,4 @@
+# Inspired from https://gist.github.com/Prakashvanapalli/221571cf036179ed5343432eca16e72b
 from keras import applications
 from keras.preprocessing.image import ImageDataGenerator
 from keras import optimizers
@@ -6,6 +7,7 @@ from keras.layers import Dropout, Flatten, Dense, GlobalAveragePooling2D
 from keras import backend as k 
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler, TensorBoard, EarlyStopping
 
+# Values taken from RASTA paper
 def imagenet_preprocess_input(x):
     # 'RGB'->'BGR'
     x = x[:, :, ::-1]
@@ -15,6 +17,7 @@ def imagenet_preprocess_input(x):
     x[:, :, 2] -= 123.68
     return x
 
+# Check that img_width and img_height correspond to the value expected to be used with the network used
 img_width, img_height = 224, 224
 train_data_dir = "data/wikipaintings_train"
 validation_data_dir = "data/wikipaintings_val"
@@ -23,21 +26,17 @@ nb_validation_samples = 7383
 batch_size = 64
 epochs = 50
 
-#model = applications.xception.Xception(weights = "imagenet", include_top=False, input_shape = (img_width, img_height, 3))
+# Change this line to use another network
 model = applications.resnet50.ResNet50(input_shape=(img_width, img_height, 3), include_top=False, weights='imagenet')
 
-# Freeze the layers which you don't want to train. Here I am freezing the first 5 layers.
-for layer in model.layers[:-33]:
+# Freeze the layers which you don't want to train
+for layer in model.layers[:-1*(len(model.layers)//5)]:
     layer.trainable = False
 
 #Adding custom Layers 
 x = model.output
-#x = Flatten()(x)
 x = GlobalAveragePooling2D()(x)
-#x = Dense(1024, activation="relu")(x)
-#x = Dropout(0.5)(x)
-#x = Dense(128, activation="elu")(x)
-#x = Dropout(0.25)(x)
+
 predictions = Dense(25, activation="softmax")(x)
 
 # creating the final model 
@@ -80,17 +79,10 @@ class_mode = "categorical")
 checkpoint = ModelCheckpoint("resnet50.h5", monitor='val_acc', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
 early = EarlyStopping(monitor='val_acc', min_delta=0, patience=10, verbose=1, mode='auto')
 
+# Save data using Tensorboard
 tbCallBack = TensorBoard(log_dir='./Graph', histogram_freq=0, write_graph=True, write_images=True)
 
+# If you want to load saved weights
 #model_final.load_weights('resnet50.h5')
 
-# Train the model 
-#model_final.fit_generator(
-#train_generator,
-#samples_per_epoch = nb_train_samples,
-#epochs = epochs,
-#validation_data = validation_generator,
-#nb_val_samples = nb_validation_samples,
-#callbacks = [checkpoint, early])
-
-model_final.fit_generator(train_generator, steps_per_epoch=1040, epochs=20, verbose=1, callbacks=[checkpoint, early, tbCallBack], validation_data=validation_generator, validation_steps=116)
+model_final.fit_generator(train_generator, steps_per_epoch=nb_train_samples//batch_size, epochs=epochs, verbose=1, callbacks=[checkpoint, early, tbCallBack], validation_data=validation_generator, validation_steps=nb_validation_samples//batch_size)
